@@ -14,6 +14,7 @@ public class ProfessorController {
 	@Autowired
 	private ProfessorService professorService;
 	
+
 	public String list(Model model) throws Exception {
 		List<ProfessorDTO> ar = professorService.list();
 		
