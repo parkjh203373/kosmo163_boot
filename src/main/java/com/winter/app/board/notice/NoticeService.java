@@ -1,9 +1,13 @@
 package com.winter.app.board.notice;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.winter.app.page.Pager;
 
 @Service
 public class NoticeService {
@@ -11,10 +15,12 @@ public class NoticeService {
 	@Autowired
 	private NoticeMapper noticeMapper;
 	
-	public List<NoticeDTO> list() throws Exception {
-		List<NoticeDTO> ar = noticeMapper.list();
+	public List<NoticeDTO> list(Pager pager) throws Exception {
 		
-		return ar;
+		pager.makePageNumber(noticeMapper.getCount());
+		
+		return noticeMapper.list(pager);
+		
 	}
 	
 	public NoticeDTO detail(NoticeDTO noticeDTO) throws Exception {

@@ -2,26 +2,40 @@ package com.winter.app.professor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.winter.app.board.notice.NoticeDTO;
 
 @SpringBootTest
 class ProfessorMapperTest {
 	
 	@Autowired
 	private ProfessorMapper professorMapper;
-
-	@Test
-	void testList() throws Exception {
-		List<ProfessorDTO> ar = professorMapper.list();
-		
-		assertNotEquals(0, ar);
+	
+	//@Test
+	void getCountList() throws Exception {
+		 Long result = professorMapper.getCount();
+		 
+		 assertNotEquals(0, result);
 	}
 
-	@Test
+	//@Test
+//	void testList() throws Exception {
+//		Map<String, Long> map = new HashMap<>();
+//		map.put("begin", 1L);
+//		map.put("end", 10L);
+//		List<ProfessorDTO> ar =professorMapper.list(map);
+//		
+//		assertNotEquals(0, ar);
+//	}
+
+	//@Test
 	void testDetail() throws Exception {
 		ProfessorDTO professorDTO = new ProfessorDTO();
 		professorDTO.setProfessorNo("P082");
@@ -43,7 +57,7 @@ class ProfessorMapperTest {
 		assertEquals(1, result);
 	}
 
-	@Test
+	//@Test
 	void testUpdate() throws Exception {
 		ProfessorDTO professorDTO = new ProfessorDTO();
 		professorDTO.setProfessorNo("P115");

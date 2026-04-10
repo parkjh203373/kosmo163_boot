@@ -1,9 +1,14 @@
 package com.winter.app.professor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.winter.app.board.notice.NoticeMapper;
+import com.winter.app.page.Pager;
 
 @Service
 public class ProfessorService {
@@ -11,10 +16,11 @@ public class ProfessorService {
 	@Autowired
 	private ProfessorMapper professorMapper;
 	
-	public List<ProfessorDTO> list() throws Exception{
-		List<ProfessorDTO> ar = professorMapper.list();
+	public List<ProfessorDTO> list(Pager pager) throws Exception{
 		
-		return ar;
+		pager.makePageNumber(professorMapper.getCount());
+		
+		return professorMapper.list(pager);
 		
 	}
 	

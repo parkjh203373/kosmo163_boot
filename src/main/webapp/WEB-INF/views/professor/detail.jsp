@@ -23,7 +23,7 @@
 	                   					<th>교수 번호</th>
 	                   					<th>교수 이름</th>
 	                   					<th>주민번호</th>
-	                   					<th>교수 주소</th>
+	                   					<th>주소</th>
 	                   					<th>학과 번호</th>
 	                   				</tr>
 	                   			</thead>
@@ -33,19 +33,16 @@
 	                   					<td>${d.professorName}</td>
 	                   					<td>${d.professorSsn}</td>
 	                   					<td>${d.professorAddress}</td>
-	                   					<td>${d.departmentNo}</td>
-	                   					
-	         
+	                   					<td>${d.departmentNo}</td>	         
 	                   				</tr>
-	                   				
 	                   			</tbody>
 	                   		</table>
                     
                     <div>
-                    	<a class="btn btn-info" href="./update?professorNo=${d.professorNo}">학과 수정</a>
+                    	<a class="btn btn-info" href="./update?professorNo=${d.professorNo}">교수 정보 수정</a>
                     	<form action="./delete" method="post">
                     		<input type="hidden" name="professorNo" value="${d.professorNo}">
-                    		<button type="submit" class="btn btn-info">학과 삭제</button>
+                    		<button type="submit" class="btn btn-info">교수 정보 삭제</button>
                     	</form>
                     </div>
                     </div>
