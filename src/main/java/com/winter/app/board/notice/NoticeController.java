@@ -26,6 +26,7 @@ public class NoticeController {
 		//map (ar : 목록, 
 		List<NoticeDTO> ar = noticeService.list(pager);
 		
+		model.addAttribute("pager", pager);
 		model.addAttribute("list", ar);
 		
 		return "notice/list";

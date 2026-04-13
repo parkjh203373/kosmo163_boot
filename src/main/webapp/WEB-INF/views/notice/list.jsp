@@ -24,9 +24,9 @@
 		                	   		<div class="input-group mb-3">
 		                	   		<div class="input-group-prepend">
 		                	   			<select name="kind" class="custom-select">
-		                	   				<option ${pager.kind eq 'v1'?'selected':""} value="v1">Title</option>
-		                	   				<option ${pager.kind eq 'v2'?'selected':""} value="v2">Contents</option>
-		                	   				<option ${pager.kind eq 'v3'?'selected':""} value="v3">Writer</option>
+		                	   				<option ${pager.kind eq 'v1'?'selected':''} value="v1">Title</option>
+		                	   				<option ${pager.kind eq 'v2'?'selected':''} value="v2">Contents</option>
+		                	   				<option ${pager.kind eq 'v3'?'selected':''} value="v3">Writer</option>
 		                	   			</select>
   									</div>
 	  									<input type="text" value="${pager.search}" name="search" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
@@ -42,6 +42,7 @@
 	                    			<tr>
 	                    				<th>공지사항 번호</th>
 	                    				<th>제목</th>
+	                    				<th>작성자</th>
 	                    				<th>등록일</th>
 	                    				<th>조회수</th>
 	                    			</tr>
@@ -51,6 +52,7 @@
 			                    		<tr>
 			                    			<td><a href="./detail?noticeNum=${d.noticeNum}">${d.noticeNum}</a></td>
 			                    			<td>${d.noticeTitle}</td>
+			                    			<td>${d.noticeWriter}</td>
 			                    			<td>${d.createdAt}</td>
 			                    			<td>${d.viewCount}</td>
 			                    		</tr>
@@ -62,16 +64,16 @@
 	                    		<nav aria-label="Page navigation example">
 									<ul class="pagination">
 										<li class="page-item ${pager.pre?'':'disabled'}">
-								      		<a class="page-link" href="./list?page=${pager.pre?pager.start-1:pager.start}&search=${pager.search}&${pager.kind}" aria-label="Previous">
+								      		<a class="page-link" href="./list?page=${pager.pre?pager.start-1:pager.start}&search=${pager.search}&kind=${pager.kind}" aria-label="Previous">
 								       			<span aria-hidden="true">&laquo;</span>
 								      		</a>
 								    	</li>
 								    		<c:forEach begin="${pager.start}" end="${pager.end}" var="i">
-	                    						<li class="page-item"><a class="page-link" href="./list?page=${i}&search=${pager.search}&${pager.kind}">${i}</a></li>
+	                    						<li class="page-item"><a class="page-link" href="./list?page=${i}&search=${pager.search}&kind=${pager.kind}">${i}</a></li>
 	                    					</c:forEach>
 	                    				
 	                    				<li class="page-item ${pager.next?'':'disabled'}">
-								    		<a class="page-link" href="./list?page=${pager.next?pager.end+1:pager.end}&search=${pager.search}&${pager.kind}" aria-label="Next">
+								    		<a class="page-link" href="./list?page=${pager.next?pager.end+1:pager.end}&search=${pager.search}&kind=${pager.kind}" aria-label="Next">
 								        		<span aria-hidden="true">&raquo;</span>
 								      		</a>
 								   		</li>
