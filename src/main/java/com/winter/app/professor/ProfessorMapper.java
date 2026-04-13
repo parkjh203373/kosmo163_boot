@@ -10,7 +10,7 @@ import com.winter.app.page.Pager;
 @Mapper
 public interface ProfessorMapper {
 	
-	public abstract Long getCount() throws Exception;
+	public abstract Long getCount(Pager pager) throws Exception;
 	
 	//list
 	public abstract List<ProfessorDTO> list(Pager pager) throws Exception;

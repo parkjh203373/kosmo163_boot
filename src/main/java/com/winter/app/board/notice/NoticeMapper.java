@@ -10,7 +10,7 @@ import com.winter.app.page.Pager;
 @Mapper
 public interface NoticeMapper {
 	
-	public abstract Long getCount() throws Exception;
+	public abstract Long getCount(Pager pager) throws Exception;
 	
 	public abstract List<NoticeDTO> list(Pager pager) throws Exception;
 	
