@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.winter.app.page.Pager;
@@ -25,6 +26,9 @@ public class NoticeService {
 	@Value("${app.upload.base}")
 	private String filePath;
 	
+	@Value("${app.board.notice}")
+	private String notice;
+	
 	public List<NoticeDTO> list(Pager pager) throws Exception {
 		
 		pager.makePageNumber(noticeMapper.getCount(pager));
@@ -37,36 +41,60 @@ public class NoticeService {
 		return noticeMapper.detail(noticeDTO);
 	}
 	
-	public int create(NoticeDTO noticeDTO, MultipartFile attach) throws Exception {
+	public int create(NoticeDTO noticeDTO, MultipartFile[] attach) throws Exception {
+		int result = noticeMapper.create(noticeDTO);
+
 		//1. 어디에 저장할 것인가
 		log.info(filePath);
-		String filePath = this.filePath+"notice";
+		String filePath = this.filePath+ "/" +this.notice;
 		
-		//2. 어떤 이름으로 저장할 것인가
-		String fileName = UUID.randomUUID().toString();
-//		log.warn(fileName);
-//		
-//		//3. 확장자
-//		log.error(attach.getOriginalFilename());
-//		String f = attach.getOriginalFilename();
-//		f = f.substring(f.lastIndexOf(".")+1);
-//		log.info(f);
-		
-		fileName = fileName+"_"+attach.getOriginalFilename();
-		
-		//4. 저장
-		File file = new File(filePath);
-		
-		if(!file.exists()) {
-			file.mkdirs();
+		//attach 자체가 null인 경우
+		if(attach == null) {
+			return result;
+		}
+		for(MultipartFile m:attach) {
+			//파일이 없는 경우
+			if(m.isEmpty()) {
+				continue;
+			}
+			
+			//2. 어떤 이름으로 저장할 것인가
+			String fileName = UUID.randomUUID().toString();
+	//		log.warn(fileName);
+	//		
+	//		//3. 확장자
+	//		log.error(attach.getOriginalFilename());
+	//		String f = attach.getOriginalFilename();
+	//		f = f.substring(f.lastIndexOf(".")+1);
+	//		log.info(f);
+			
+			fileName = fileName+"_"+m.getOriginalFilename();
+			
+			//4. 저장
+			File file = new File(filePath);
+			
+			if(!file.exists()) {
+				file.mkdirs();
+			}
+			
+			file = new File(file, fileName);
+			
+			//5. 파일 저장
+			m.transferTo(file);
+			
+			//6. Spring에서  제공
+			//FileCopyUtils.copy(attach.getBytes(), file);
+			
+			//7. DB에 저장
+			NoticeFileDTO noticeFileDTO = new NoticeFileDTO();
+			noticeFileDTO.setFileName(fileName);
+			noticeFileDTO.setOriName(m.getOriginalFilename());
+			noticeFileDTO.setNoticeNum(noticeDTO.getNoticeNum());
+			result = noticeMapper.createFile(noticeFileDTO);
 		}
 		
-		file = new File(file, fileName);
+		return result;//noticeMapper.create(noticeDTO);
 		
-		//5. 파일 저장
-		attach.transferTo(file);
-		
-		return 0;//noticeMapper.create(noticeDTO);
 	}
 
 

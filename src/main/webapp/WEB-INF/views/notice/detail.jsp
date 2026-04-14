@@ -24,6 +24,7 @@
 	                   					<th>제목</th>
 	                   					<th>작성자</th>
 	                   					<th>내용</th>
+	                   					<th>첨부파일</th>
 	                   				</tr>
 	                   			</thead>
 	                   			<tbody>
@@ -33,6 +34,13 @@
 	                   					<td>
 	                   						<div>
 	                   							${d.noticeContents}
+	                   						</div>
+	                   					</td>
+	                   					<td>
+	                   						<div>	                   						
+		                   						<c:forEach items="${d.list}" var="f">
+		                   							<h4><img src="/files/notice/${f.fileName}"></h4>
+		                   						</c:forEach>
 	                   						</div>
 	                   					</td>
 	                   				</tr>

@@ -5,6 +5,16 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.winter.app.board.notice.NoticeMapper">
+  	<!-- File -->
+  	<insert id="createFile" parameterType="NoticeFileDTO">
+  		INSERT INTO TB_NOTICEFILE VALUES (
+  			NOTICE_SEQ.NEXTVAL,
+  			#{fileName},
+  			#{oriName},
+  			#{noticeNum}
+  		)
+  	</insert>
+  	<!-- File 끝 -->
   	<sql id="search">
   		WHERE
   		<choose>
@@ -48,13 +58,37 @@
 			WHERE R BETWEEN #{first} AND #{last}
   	</select>
   	
-  	<select id="detail" parameterType="NoticeDTO" resultType="NoticeDTO">
-  		SELECT * FROM TB_NOTICE WHERE NOTICE_NUM=#{noticeNum}
+  	<select id="detail" parameterType="NoticeDTO" resultMap="detailResult">
+  		SELECT * FROM TB_NOTICE N
+  		LEFT JOIN
+  		TB_NOTICEFILE F
+  		USING(NOTICE_NUM)
+  		WHERE NOTICE_NUM = #{noticeNum}
   	</select>
   	
+  	<resultMap type="NoticeDTO" id="detailResult">
+  		<!-- Primary Key -->
+  		<id column="NOTICE_NUM" property="noticeNum"/>
+  		<!-- 그외 나머지 -->
+  		<result column="NOTICE_TITLE" property="noticeTitle"/>
+  		<result column="NOTICE_WRITER" property="noticeWriter"/>
+  		<result column="NOTICE_CONTENTS" property="noticeContents"/>
+  		<result column="CREATE_AT" property="createAt"/>
+  		<result column="VIEW_COUNT" property="viewCount"/>
+  		<!-- 1:N -->
+  		<collection property="list" javaType="java.util.List" ofType="NoticeFileDTO">
+  			<id column="FILE_NUM" property="fileNum"/>
+  			<result column="FILE_NAME" property="fileName"/>
+  			<result column="ORI_NAME" property="oriName"/>
+  		</collection>
+  	</resultMap>
+  	
   	<insert id="create" parameterType="NoticeDTO">
+  		<selectKey order="BEFORE" resultType="Long" keyProperty="noticeNum">
+  			SELECT NOTICE_SEQ.NEXTVAL FROM DUAL
+  		</selectKey>
   		INSERT INTO TB_NOTICE VALUES (
-  			NOTICE_SEQ.NEXTVAL,
+  			#{noticeNum},
   			#{noticeTitle},
   			#{noticeContents},
   			#{noticeWriter},

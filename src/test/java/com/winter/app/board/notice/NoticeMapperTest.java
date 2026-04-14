@@ -1,6 +1,7 @@
 package com.winter.app.board.notice;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -11,7 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootTest
+@Slf4j
 class NoticeMapperTest {
 	
 	@Autowired
@@ -34,15 +38,17 @@ class NoticeMapperTest {
 //		assertNotEquals(0, ar);
 //	}
 //	
-//	//@Test
-//	void testDetail() throws Exception {
-//		NoticeDTO noticeDTO = new NoticeDTO();
-//		noticeDTO.setNoticeNum(1L);
-//		noticeDTO = noticeMapper.detail(noticeDTO);
-//		
-//		assertNotNull(noticeDTO);
-//		
-//	}
+	@Test
+	void testDetail() throws Exception {
+		NoticeDTO noticeDTO = new NoticeDTO();
+		noticeDTO.setNoticeNum(129L);
+		
+		noticeDTO = noticeMapper.detail(noticeDTO);
+		log.info("Map : {}", noticeDTO);
+		
+		assertNotNull(noticeDTO);
+		
+	}
 //	
 //	//@Test
 //	void testCreate() throws Exception {
