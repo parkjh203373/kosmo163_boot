@@ -1,4 +1,4 @@
-package com.winter.app.board;
+package com.winter.app.board.qna;
 
 import java.util.List;
 
@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.winter.app.board.notice.NoticeDTO;
 import com.winter.app.board.qna.QnaDTO;
 import com.winter.app.page.Pager;
+
+import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @RequestMapping("/qna/*")
@@ -32,9 +34,38 @@ public class QnaController {
 		return "qna/list";
 	}
 	
+	@GetMapping("detail")
+	public String detail(QnaDTO qnaDTO, Model model) throws Exception {
+		qnaDTO = qnaService.detail(qnaDTO);
+		
+		model.addAttribute("d", qnaDTO);
+		
+		return "qna/detail";
+		
+	}
+	
+	
+	@GetMapping("create")
+	public String create() throws Exception {
+		return "qna/create";
+	}
+	
 	@PostMapping("create")
-	public String create(QnaDTO qnaDTO) throws Exception {
-		int result = qnaService.create(qnaDTO);
+	public String create(QnaDTO qnaDTO, @RequestParam("attach") MultipartFile[] attach) throws Exception {
+		int result = qnaService.create(qnaDTO, attach);
+		
+		return "redirect:./list";
+		
+	}
+	
+	@GetMapping("reply")
+	public void replyCreate(QnaDTO qnaDTO, Model model) throws Exception {
+		model.addAttribute("d", qnaDTO);
+	}
+	
+	@PostMapping("reply")
+	public String replyCreate(QnaDTO qnaDTO) throws Exception {
+		int result = qnaService.replyCreate(qnaDTO);
 		
 		return "redirect:./list";
 		

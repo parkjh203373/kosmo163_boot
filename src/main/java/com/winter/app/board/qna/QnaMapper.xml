@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.winter.app.board.qna.QnaMapper">
+	<insert id="createFile" parameterType="QnaFileDTO">
+  		INSERT INTO TB_QNAFILE VALUES (
+  			QNA_SEQ.NEXTVAL,
+  			#{fileName},
+  			#{oriName},
+  			#{noticeNum}
+  		)
+  	</insert>
+
+	<sql id="search">
+  		WHERE
+  		<choose>
+  			<when test="kind=='v2'">NOTICE_CONTENTS</when>
+  			<when test="kind=='v3'">NOTICE_WRITER</when>
+  			<otherwise>NOTICE_TITLE</otherwise>
+  		</choose>
+  		LIKE '%'||#{search}||'%'
+  	</sql>
+  	
+	<select id="list" resultType="QnaDTO" parameterType="Pager">
+			SELECT * FROM
+			(
+				SELECT ROWNUM R, T.* FROM
+				(
+					SELECT * FROM TB_QNA
+					<include refid="search"></include>
+					ORDER BY NOTICE_REF DESC, NOTICE_STEP ASC
+				) T
+			)
+			WHERE R BETWEEN #{first} AND #{last}
+	</select>
+	
+	<select id="detail" parameterType="QnaDTO" resultMap="detailResult">
+		SELECT * FROM TB_QNA Q
+		LEFT JOIN
+		TB_QNAFILE F
+		USING (NOTICE_NUM)
+		WHERE NOTICE_NUM = #{noticeNum}
+	</select>
+	
+	<resultMap type="QnaDTO" id="detailResult">
+		<id column="NOTICE_NUM" property="noticeNum"/>
+		<result column="NOTICE_TITLE" property="noticeTitle"/>
+		<result column="NOTICE_CONTENTS" property="noticeContents"/>
+		<result column="NOTICE_WRITER" property="noticeWriter"/>
+  		<result column="CREATE_AT" property="createAt"/>
+  		<result column="VIEW_COUNT" property="viewCount"/>
+  		<result column="NOTICE_REF" property="noticeRef"/>
+  		<result column="NOTICE_STEP" property="noticeStep"/>
+  		<result column="NOTICE_DEPTH" property="noticeDepth"/>
+  		<collection property="list" javaType="java.util.List" ofType="QnaFileDTO">
+  		  	<id column="FILE_NUM" property="fileNum"/>
+  			<result column="FILE_NAME" property="fileName"/>
+  			<result column="ORI_NAME" property="oriName"/>
+  		</collection>
+	</resultMap>
+	
+	<select id="getCount" resultType="Long" parameterType="Pager">
+  		SELECT COUNT(NOTICE_NUM) FROM TB_QNA
+  		<include refid="search"></include>
+  	</select>
+  	
+  	<insert id="create" parameterType="QnaDTO">
+  		<selectKey order="BEFORE" resultType="Long" keyProperty="noticeNum">
+  			SELECT QNA_SEQ.NEXTVAL FROM DUAL
+  		</selectKey>
+  		INSERT INTO TB_QNA VALUES (
+  			#{noticeNum},
+  			#{noticeTitle},
+  			#{noticeContents},
+  			#{noticeWriter},
+  			sysdate,
+  			0,
+  			<if test="noticeRef != null">
+  				#{noticeRef},
+  			</if>
+  			<if test="noticeRef == null">
+  				#{noticeNum},
+  			</if>
+  			#{noticeStep},
+  			#{noticeDepth}
+  		)
+  	</insert>
+  	
+  	<update id="replyUpdate" parameterType="QnaDTO">
+  		UPDATE TB_QNA SET NOTICE_STEP=NOTICE_STEP+1
+  		WHERE NOTICE_REF=#{noticeRef} AND NOTICE_STEP>#{noticeStep}
+  	</update>
+
+</mapper>

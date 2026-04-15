@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.winter.app.board.QnaMapper;
+import com.winter.app.board.qna.QnaMapper;
 import com.winter.app.board.notice.NoticeMapper;
 import com.winter.app.page.Pager;
 
@@ -15,6 +15,20 @@ class QnaMapperTest {
 
 	@Autowired
 	private QnaMapper qnaMapper;
+	
+	@Test
+	void testCreate() throws Exception {
+		QnaDTO qnaDTO = new QnaDTO();
+		qnaDTO.setNoticeTitle("답글2");
+		qnaDTO.setNoticeContents("답글 내용2");
+		qnaDTO.setNoticeWriter("user2");
+		qnaDTO.setNoticeRef(115L);
+		qnaDTO.setNoticeStep(2L);
+		qnaDTO.setNoticeDepth(2L);
+		
+		int result = qnaMapper.create(qnaDTO);
+		assertEquals(1, result);
+	}
 	
 //	@Test
 //	void testCreate() throws Exception {

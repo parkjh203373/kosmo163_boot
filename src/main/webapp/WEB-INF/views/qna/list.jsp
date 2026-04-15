@@ -50,8 +50,9 @@
 	                    		<tbody>
 			                    	<c:forEach items="${list}" var="d">
 			                    		<tr>
-			                    			<td><a href="./detail?noticeNum=${d.noticeNum}">${d.noticeNum}</a></td>
-			                    			<td>${d.noticeTitle}</td>
+			                    			<td>${d.noticeNum}</td>
+			                    			<td><a href="./detail?noticeNum=${d.noticeNum}">
+			                    			<c:forEach begin="1" end="${d.noticeDepth}">--</c:forEach> ${d.noticeTitle}</a></td>
 			                    			<td>${d.noticeWriter}</td>
 			                    			<td>${d.createdAt}</td>
 			                    			<td>${d.viewCount}</td>
